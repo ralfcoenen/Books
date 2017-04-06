@@ -159,7 +159,34 @@ class BookPanel(wx.Panel):
         if not selectedRow:
             commonDlgs.showMessageDlg("No row selected!", "Error")
         else:
-            result=export2excel(selectedRow)
+            result=self.export2excel(selectedRow)
+
+    def export2excel(l,event):
+        workbook = xlsxwriter.Workbook('Export.xlsx')
+        worksheet = workbook.add_worksheet()
+        # Header
+        row = 1
+        col = 0
+        worksheet.write('A1', 'Author')
+        worksheet.write('B1', 'Firstname')
+        worksheet.write('C1', 'ID')
+        worksheet.write('D1', 'ISBN')
+        worksheet.write('E1', 'Lastname')
+        worksheet.write('F1', 'Publisher')
+        worksheet.write('H1', 'Title')
+        # Data
+        for r in l:
+            worksheet.write_string(row, col, r.author)
+            worksheet.write_string(row, col + 1, r.first_name)
+            worksheet.write_number(row, col + 2, r.id)
+            worksheet.write_string(row, col + 3, r.isbn)
+            worksheet.write_string(row, col + 4, r.last_name)
+            worksheet.write_string(row, col + 5, r.publisher)
+            worksheet.write_string(row, col + 6, r.title)
+            row += 1
+        res = workbook.close()
+        os.system('Export.xlsx')
+        return
 
 
 # #######################################################################
@@ -177,32 +204,7 @@ class BookFrame(wx.Frame):
         
 # ----------------------------------------------------------------------
 
-def export2excel(l):
-    workbook = xlsxwriter.Workbook('Export.xlsx')
-    worksheet = workbook.add_worksheet()
-    #Header
-    row = 1
-    col = 0
-    worksheet.write('A1','Author')
-    worksheet.write('B1', 'Firstname')
-    worksheet.write('C1', 'ID')
-    worksheet.write('D1', 'ISBN')
-    worksheet.write('E1', 'Lastname')
-    worksheet.write('F1', 'Publisher')
-    worksheet.write('H1', 'Title')
-    # Data
-    for r in l:
-        worksheet.write_string(row, col,     r.author)
-        worksheet.write_string(row, col + 1, r.first_name)
-        worksheet.write_number(row, col + 2, r.id)
-        worksheet.write_string(row, col + 3, r.isbn)
-        worksheet.write_string(row, col + 4, r.last_name)
-        worksheet.write_string(row, col + 5, r.publisher)
-        worksheet.write_string(row, col + 6, r.title)
-        row += 1
-    res=workbook.close()
-    os.system('Export.xlsx')
-    return
+
 
 if __name__ == "__main__":
     app = wx.App(False)
